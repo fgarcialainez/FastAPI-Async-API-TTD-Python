@@ -24,5 +24,62 @@ def test_create_note(test_app, monkeypatch):
 
 
 def test_create_note_invalid_json(test_app):
+    # Execute the request
     response = test_app.post("/notes/", data=json.dumps({"title": "something"}))
+
+    # Check the results
     assert response.status_code == 422
+
+
+def test_read_note(test_app, monkeypatch):
+    # Create some test data
+    test_data = {"id": 1, "title": "something", "description": "something else"}
+
+    # Mock the crud.get function
+    async def mock_get(id):
+        return test_data
+
+    monkeypatch.setattr(crud, "get", mock_get)
+
+    # Execute the request
+    response = test_app.get("/notes/1")
+
+    # Check the results
+    assert response.status_code == 200
+    assert response.json() == test_data
+
+
+def test_read_note_incorrect_id(test_app, monkeypatch):
+    # Mock the crud.get function
+    async def mock_get(id):
+        return None
+
+    monkeypatch.setattr(crud, "get", mock_get)
+
+    # Execute the request
+    response = test_app.get("/notes/999")
+
+    # Check the results
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Note not found"
+
+
+def test_read_all_notes(test_app, monkeypatch):
+    # Create some test data
+    test_data = [
+        {"title": "something", "description": "something else", "id": 1},
+        {"title": "someone", "description": "someone else", "id": 2},
+    ]
+
+    # Mock the crud.get_all function
+    async def mock_get_all():
+        return test_data
+
+    monkeypatch.setattr(crud, "get_all", mock_get_all)
+
+    # Execute the request
+    response = test_app.get("/notes/")
+
+    # Check the results
+    assert response.status_code == 200
+    assert response.json() == test_data
