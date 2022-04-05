@@ -1,4 +1,4 @@
-"""This module holds the tests of the appp"""
+"""This module holds the tests for the ping endpoints"""
 
 
 def test_ping(test_app):
