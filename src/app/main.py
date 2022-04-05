@@ -1,7 +1,7 @@
 """This module holds the entry point of the app"""
 from fastapi import FastAPI
 
-from app.api import ping
+from app.api import ping, notes
 from app.db import database, engine, metadata
 
 # Create all tables stored in this metadata
@@ -24,3 +24,4 @@ async def shutdown():
 
 # Include the available routers
 app.include_router(ping.router)
+app.include_router(notes.router, prefix="/notes", tags=["notes"])

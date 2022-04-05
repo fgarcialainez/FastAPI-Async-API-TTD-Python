@@ -1,4 +1,4 @@
-"""This module holds some API endpoints implementation"""
+"""This module holds the ping API endpoints implementation"""
 from fastapi import APIRouter
 
 # Instantiate an API router
